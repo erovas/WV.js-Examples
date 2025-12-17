@@ -167,7 +167,7 @@ class Calculator {
 
 //#region FUNCIONALIDAD VENTANA
 
-/** @type {WebView} */
+/** @type {IWebView} */
 const WV = window.WebView.Sync;
 
 const WVWin = WV.Window;

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/xp.css">
+    <style>
+        html, body {
+            touch-action: manipulation; /* Permite pan y scroll pero no zoom */
+            -ms-touch-action: manipulation; /* Para IE/Edge */
+            overscroll-behavior: contain; /* Evita bounce effect en iOS/Android */
+            -webkit-text-size-adjust: 100%; /* Evita zoom en texto iOS */
+            -moz-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        html {
+            transition: 0.2s linear opacity;
+            /*opacity: 0 */
+        }
+
+        body, html {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: transparent;
+        }
+
+        .window {
+            height: 100%; 
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .window-body {
+            flex-grow: 1;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-bar-text" id="titleWindow">WV.js</div>
+            <div class="title-bar-controls">
+                <button aria-label="Minimize" title="Minimize" id="btnMinimize"></button>
+                <button aria-label="Maximize" title="Maximize" id="btnMaximize"></button>
+                <button aria-label="Restore" title="Restore" id="btnRestore"></button>
+                <button aria-label="Close" title="Close" id="btnClose"></button>
+            </div>
+        </div>
+
+        <div class="window-body">
+
+            <fieldset>
+                <legend>WebView</legend>
+                <div class="field-row">
+                    <label>UID: </label>
+                    <b><span id="UID"></span></b>
+                </div>
+                <div class="field-row">
+                    <label>Name: </label>
+                    <b><span id="Name"></span></b>
+                </div>
+                <div class="field-row">
+                    <label>IsMain: </label>
+                    <b><span id="IsMain"></span></b>
+                </div>
+                <div class="field-row">
+                    <label>PluginsName: </label>
+                    <b><span id="PluginsName"></span></b>
+                </div>
+            </fieldset>
+
+            <!---------------------------------------------------------------->
+            <!---------------------------------------------------------------->
+
+            <fieldset>
+                <legend>Window</legend>
+                <div class="field-row">
+                    <input id="wvtitle" type="text" name="wvtitle">
+                    <label for="wvtitle">Title</label>
+                    <div></div>
+                    <input id="TopMost" type="checkbox" name="TopMost">
+                    <label for="TopMost">TopMost</label>
+                    <div></div>
+                    <input id="Enabled" type="checkbox" name="Enabled">
+                    <label for="Enabled">Enabled</label>
+                    <div></div>
+                    <input id="PreventClose" type="checkbox" name="PreventClose">
+                    <label for="PreventClose">PreventClose</label>
+                    <div></div>
+                    <input id="AllowSnap" type="checkbox" name="AllowSnap">
+                    <label for="AllowSnap">AllowSnap</label>
+                </div>
+                
+                <div class="field-row">
+                    <label>IsVisible: </label>
+                    <b><span id="IsVisible"></span></b>
+                    <div></div>
+                    <label>IsActive: </label>
+                    <b><span id="IsActive"></span></b>
+                    <div></div>
+                    <label>State: </label>
+                    <b><span id="State"></span></b>
+                </div>
+                
+            </fieldset>
+
+            <!---------------------------------------------------------------->
+
+            <fieldset>
+                <legend>Rect</legend>
+                <div class="field-row">
+                    <input id="X" type="number" name="X">
+                    <label for="X">X</label>
+                    <input id="Y" type="number" name="Y">
+                    <label for="Y">Y</label>
+                </div>
+                <div class="field-row">
+                    <input id="MinWidth" type="number" name="MinWidth">
+                    <label for="MinWidth">MinWidth</label>
+                    <input id="MinHeight" type="number" name="MinHeight">
+                    <label for="MinHeight">MinHeight</label>
+                </div>
+                <div class="field-row">
+                    <input id="Width" type="number" name="Width">
+                    <label for="Width">Width</label>
+                    <input id="Height" type="number" name="Y">
+                    <label for="Height">Height</label>
+                </div>
+                <div class="field-row">
+                    <input id="MaxWidth" type="number" name="MaxWidth">
+                    <label for="MaxWidth">MaxWidth</label>
+                    <input id="MaxHeight" type="number" name="MaxHeight">
+                    <label for="MaxHeight">MaxHeight</label>
+                </div>
+            </fieldset>
+
+            <!---------------------------------------------------------------->
+            <!---------------------------------------------------------------->
+
+            <fieldset>
+                <legend>Browser</legend>
+                <div class="field-row">
+                    <label>Uri: </label>
+                    <b><a id="Uri"></a></b>
+                </div>
+                
+                <div class="field-row">
+                    <label>CanGoBack: </label>
+                    <b><span id="CanGoBack"></span></b>
+                    <div></div>
+                    <label>CanGoForward: </label>
+                    <b><span id="CanGoForward"></span></b>
+                </div>
+                
+                <div class="field-row">
+                    <label>IsPlayingAudio: </label>
+                    <b><span id="IsPlayingAudio"></span></b>
+                    <audio controls>
+                        <source src="Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">
+                        <!--<source src="D:/Documents/Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">-->
+                      Your browser does not support the audio element.
+                    </audio>
+                </div>
+
+                <div class="field-row">
+                    <input id="HotReload" type="checkbox" name="HotReload">
+                    <label for="HotReload">HotReload</label>
+                    <div></div>
+                    <input id="AcceleratorKeys" type="checkbox" name="AcceleratorKeys">
+                    <label for="AcceleratorKeys">AcceleratorKeys</label>
+                </div>
+
+                <div class="field-row">
+                    <input id="SwipeNavigation" type="checkbox" name="SwipeNavigation">
+                    <label for="SwipeNavigation">SwipeNavigation</label>
+                    <div></div>
+                    <input id="ResetWebViewOnReload" type="checkbox" name="ResetWebViewOnReload">
+                    <label for="ResetWebViewOnReload">ResetWebViewOnReload</label>
+                    <div></div>
+                    <input id="Muted" type="checkbox" name="Muted">
+                    <label for="Muted">Muted</label>
+                </div>
+
+                <div class="field-row">
+                    <input id="ZoomFactor" type="number" name="ZoomFactor" style="width: 30px;">
+                    <label for="ZoomFactor">ZoomFactor</label>
+                    <div></div>
+                    <label>Min ZoomFactor: </label>
+                    <label id="minZoomFactor"></label>
+                    <div></div>
+                    <label>Max ZoomFactor: </label>
+                    <label id="maxZoomFactor"></label>
+                </div>
+                
+                <div class="field-row">
+                    <input id="OpenDevTools" type="button" name="OpenDevTools" value="OpenDevTools">
+                    <input id="Reload" type="button" name="Reload" value="Reload">
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="status-bar">
+            <p class="status-bar-field">Position: <b><span id="PositionFoot"></span></b></p>
+            <p class="status-bar-field">Size: <b><span id="SizeFoot"></span></b></p>
+            <p class="status-bar-field">State: <b><span id="StateFoot"></span></b></p>
+            <p class="status-bar-field">IsActive: <b><span id="IsActiveFoot"></span></b></p>
+            <p class="status-bar-field">Playing Audio: <b><span id="IsPlayingAudioFoot"></span></b></p>
+            <p class="status-bar-field">Muted: <b><span id="MutedFoot"></span></b></p>
+        </div>
+
+    </div>
+</body>
+</html>
