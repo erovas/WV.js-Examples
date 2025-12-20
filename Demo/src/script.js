@@ -194,7 +194,7 @@ function FireWVWin(WVWin){
     }
 
     // Si PreventClose == true, se dispara el evento OnClose
-    WVWin.OnClose = function(){
+    WVWin.OnClosing = function(){
     
         let exit = window.confirm("¿Do you want to exit?");
     
