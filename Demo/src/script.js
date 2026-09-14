@@ -27,8 +27,8 @@ WV.Window.Rect.Height = 610;
 WV.Window.Title = "WV.js"
 
 // Plugins instances
-const TaskbarManager  = WV.NewPluginInstance("TaskbarController");
-const SysMenu = WV.NewPluginInstance("SysMenuController");
+let TaskbarManager  = WV.NewPluginInstance("TaskbarController");
+let SysMenu = WV.NewPluginInstance("SysMenuController");
 
 
 TaskbarManager.Icon = "Bombilla.ico" // .../src/Ver.js.ico
@@ -166,7 +166,7 @@ function FireWVWin(WVWin){
         WVWin.Enabled = e.target.checked;
     }
 
-    WVWin.OnEnabled = isEnable => {
+    WVWin.AddEventListener("EnabledEvent", isEnable => {
         if(isEnable)
             return;
 
@@ -174,16 +174,17 @@ function FireWVWin(WVWin){
             Enabled.checked = true;
             WVWin.Enabled = true;
         }, 3000);
-    }
+    });
 
     /** @type {HTMLSpanElement} */
     let IsVisible = GetElementById("IsVisible");
 
-    WVWin.OnVisible = visible => {
+    let OnVisible = visible => {
         IsVisible.textContent = visible;
     }
 
-    WVWin.OnVisible(WVWin.IsVisible);
+    WVWin.AddEventListener("Visible", OnVisible);
+    OnVisible(WVWin.IsVisible);
 
     /** @type {HTMLInputElement} */
     let PreventClose = GetElementById("PreventClose");
@@ -194,7 +195,7 @@ function FireWVWin(WVWin){
     }
 
     // Si PreventClose == true, se dispara el evento OnClose
-    WVWin.OnClosing = function(){
+    WVWin.AddEventListener("Closing", function(){
     
         let exit = window.confirm("¿Do you want to exit?");
     
@@ -204,7 +205,7 @@ function FireWVWin(WVWin){
         WVWin.PreventClose = false;
         PreventClose.checked = false;
         WVWin.Close();
-    }
+    });
 
     /** @type {HTMLInputElement} */
     let AllowSnap = GetElementById("AllowSnap");
@@ -223,16 +224,6 @@ function FireWVWin(WVWin){
     
     // Evento de WebView, para disparar cuando se active/desactive la mentana
     // Enfocada/Desenfocada la ventana
-    /*
-    WVWin.OnActivated = function(isActive){
-        document.documentElement.style.opacity = isActive? 1 : 0.85;
-        IsActive.textContent = isActive;
-        IsActiveFoot.textContent = isActive;
-    }
-    
-    WVWin.OnActivated(WVWin.IsActive);
-
-    */
     let fn = function(isActive){
         document.documentElement.style.opacity = isActive? 1 : 0.85;
         IsActive.textContent = isActive;
@@ -257,7 +248,7 @@ function FireWVWin(WVWin){
     /** @type {HTMLButtonElement} */
     let btnClose = GetElementById("btnClose");
 
-    WVWin.OnStateChanged = function(value, text){
+    let OnStateChanged = (value, text) => {
         switch (value) {
             case MINIMIZED:
                 //text = "Minimized"
@@ -282,8 +273,8 @@ function FireWVWin(WVWin){
         State.textContent = text;
         StateFoot.textContent = text;
     }
-    
-    WVWin.OnStateChanged(WV.Window.State, WV.Window.StateText);
+
+    OnStateChanged(WV.Window.State, WV.Window.StateText);
 
     btnMinimize.onclick = e => WV.Window.Minimize();
     btnMaximize.onclick = e => WV.Window.Maximize();
@@ -323,15 +314,6 @@ function FireRect(WVWin){
         Rect.Y = e.target.value;
     }
 
-    /*
-    WVWin.OnPositionChanged = function(x, y){
-        PositionFoot.textContent = x + "x" + y
-        X.value = x;
-        Y.value = y;
-    }
-    
-    WVWin.OnPositionChanged(Rect.X, Rect.Y);
-*/
     const pfn = function(x, y){
         PositionFoot.textContent = x + "x" + y
         X.value = x;
@@ -419,25 +401,6 @@ function FireRect(WVWin){
     /** @type {HTMLSpanElement} */
     let SizeFoot = GetElementById("SizeFoot");
 
-    /*
-    window.onresize = function(){
-        SizeFoot.textContent = window.innerWidth + 'x' + window.innerHeight;
-        Width.value = window.innerWidth;
-        Height.value = window.innerHeight;
-    }
-    
-    window.onresize();
-    */
-   /*
-    WVWin.OnSizeChanged = function(width, height){
-        SizeFoot.textContent = width + 'x' + height;
-        Width.value = width;
-        Height.value = height;
-    }
-
-    WVWin.OnSizeChanged(window.innerWidth, window.innerHeight);
-    */
-
     const sfn = function(width, height){
         SizeFoot.textContent = width + 'x' + height;
         Width.value = width;
@@ -474,12 +437,13 @@ function FireBrowser(Browser){
     /** @type {HTMLSpanElement} */
     let IsPlayingAudioFoot = GetElementById("IsPlayingAudioFoot");
 
-    WV.Browser.OnPlayingAudio = function(isPlayingAudio){
+    let OnPlayingAudio = isPlayingAudio => {
         IsPlayingAudio.textContent = isPlayingAudio;
         IsPlayingAudioFoot.textContent = isPlayingAudio;
     }
-    
-    Browser.OnPlayingAudio(Browser.IsPlayingAudio)
+
+    WV.Browser.AddEventListener("PlayingAudio", OnPlayingAudio);
+    OnPlayingAudio(Browser.IsPlayingAudio);
 
     /** @type {HTMLInputElement} */
     let HotReload = GetElementById("HotReload");
@@ -527,12 +491,13 @@ function FireBrowser(Browser){
         MutedFoot.textContent = e.target.checked;
     }
 
-    Browser.OnMuted = function(isMuted){
+    let OnMuted = isMuted => {
         Muted.checked = isMuted;
         MutedFoot.textContent = isMuted
     }
-    
-    Browser.OnMuted(Browser.Muted);
+
+    Browser.AddEventListener("MutedEvent", OnMuted);
+    OnMuted(Browser.Muted);
 
     /** @type {HTMLInputElement} */
     let ZoomFactor = GetElementById("ZoomFactor");
@@ -542,7 +507,7 @@ function FireBrowser(Browser){
     ZoomFactor.min = minZoom;
     ZoomFactor.max = maxZoom;
     ZoomFactor.step = 0.1;
-
+    
     document.getElementById("minZoomFactor").innerText = minZoom;
     document.getElementById("maxZoomFactor").innerText = maxZoom;
 
@@ -550,11 +515,12 @@ function FireBrowser(Browser){
         Browser.ZoomFactor = parseFloat(e.target.value);
     }
 
-    Browser.OnZoomFactorChanged = function(factor){
+    let OnZoomFactorChanged = factor => {
         ZoomFactor.value = factor;
     }
 
-    Browser.OnZoomFactorChanged(Browser.ZoomFactor);
+    Browser.AddEventListener("ZoomFactorChanged", OnZoomFactorChanged);
+    OnZoomFactorChanged(Browser.ZoomFactor);
 
     /** @type {HTMLInputElement} */
     let OpenDevTools = GetElementById("OpenDevTools");
@@ -770,51 +736,47 @@ window.onload = function(){
         }
     }
 
-    //#region Pinch Zoom
 
-    let ctrlPulsado = false;
+let ctrlPulsado = false;
 
-    document.addEventListener('keydown', function(event) {
-        // Si se presiona Ctrl justo después de una rueda, bloquearla temporalmente
-        if (event.key === 'Control') {
-            ctrlPulsado = true;
-            return;
-        }
+document.addEventListener('keydown', function(event) {
+    // Si se presiona Ctrl justo después de una rueda, bloquearla temporalmente
+    if (event.key === 'Control') {
+        ctrlPulsado = true;
+        return;
+    }
 
+    ctrlPulsado = false;
+});
+
+document.addEventListener('keyup', function(event) {
+    // Si se presiona Ctrl justo después de una rueda, bloquearla temporalmente
+    if (event.key === 'Control') {
         ctrlPulsado = false;
-    });
+        return;
+    }
 
-    document.addEventListener('keyup', function(event) {
-        // Si se presiona Ctrl justo después de una rueda, bloquearla temporalmente
-        if (event.key === 'Control') {
-            ctrlPulsado = false;
-            return;
-        }
+    ctrlPulsado = false;
+});
 
-        ctrlPulsado = false;
-    });
-
-    // Bloquear zoom con Ctrl + Rueda (gesto común de touchpad)
-    document.addEventListener('wheel', function(event) {
-        if (event.ctrlKey && !ctrlPulsado) {
-            event.preventDefault();
-        }
-    }, { passive: false });
-
-
-
-    // Prevent pinch-zoom -- Touch Screen
-    document.addEventListener('touchmove', function(event) {
-        if (event.scale !== 1) {
+// Bloquear zoom con Ctrl + Rueda (gesto común de touchpad)
+document.addEventListener('wheel', function(event) {
+    //if (event.ctrlKey && !ctrlPulsado) {
+    if (event.ctrlKey) {
         event.preventDefault();
-        }
-    }, { passive: false });
+    }
+}, { passive: false });
 
-    // Prevent pinch zoom via gesturestart (iOS)
-    document.addEventListener('gesturestart', function(event) {
-    event.preventDefault();
-    }, { passive: false });
+// Prevent pinch-zoom -- Touch Screen
+document.addEventListener('touchmove', function(event) {
+    if (event.scale !== 1) {
+      event.preventDefault();
+    }
+}, { passive: false });
 
-    //#endregion
+// Prevent pinch zoom via gesturestart (iOS)
+document.addEventListener('gesturestart', function(event) {
+  event.preventDefault();
+}, { passive: false });
 
 }
