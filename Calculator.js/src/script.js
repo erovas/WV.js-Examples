@@ -179,7 +179,7 @@ WVWin.AllowSnap = false;
 WVWin.Title = "Calculator.js"
 
 // Abrir DevTools, solo para debugging
-WVBrowser.OpenDevTools();
+//WVBrowser.OpenDevTools();
 
 // Recarga automatica cuando se cambie codigo JS solo debugging
 //WVBrowser.HotReload = true;
@@ -203,7 +203,7 @@ Rect.Y = 100;
 WV.Plugins.LoadFrom();
 
 const TaskbarController = WV.Plugins.NewInstance("TaskbarController");
-TaskbarController.Icon = "C:/Calculator.ico"
+TaskbarController.Icon = "Calculator.ico"
 TaskbarController.IconSmall = "/Calculator.ico"
 
 
