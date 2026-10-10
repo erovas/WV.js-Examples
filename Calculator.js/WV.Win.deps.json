@@ -10,7 +10,7 @@
         "dependencies": {
           "Microsoft.Web.WebView2": "1.0.4191.47",
           "WV": "1.0.0",
-          "WV.Logger": "1.0.0",
+          "WV.Core": "1.0.0",
           "Microsoft.Web.WebView2.Core": "1.0.4191.47",
           "Microsoft.Web.WebView2.WinForms": "1.0.4191.47",
           "Microsoft.Web.WebView2.Wpf": "1.0.4191.47"
@@ -46,12 +46,12 @@
           }
         }
       },
-      "WV.Logger/1.0.0": {
+      "WV.Core/1.0.0": {
         "dependencies": {
           "WV": "1.0.0"
         },
         "runtime": {
-          "WV.Logger.dll": {
+          "WV.Core.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -101,7 +101,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "WV.Logger/1.0.0": {
+    "WV.Core/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -179,7 +179,7 @@ WVWin.AllowSnap = false;
 WVWin.Title = "Calculator.js"
 
 // Abrir DevTools, solo para debugging
-//WVBrowser.OpenDevTools();
+WVBrowser.OpenDevTools();
 
 // Recarga automatica cuando se cambie codigo JS solo debugging
 //WVBrowser.HotReload = true;
@@ -200,14 +200,14 @@ Rect.X = 100;
 Rect.Y = 100;
 
 // Cargar los plugins que estan en la carpeta Calculator.js/plugins
-WV.LoadPluginsFromFolder();
+WV.Plugins.LoadFrom();
 
-const TaskbarController = WV.NewPluginInstance("TaskbarController");
-TaskbarController.Icon = "/Calculator.ico"
+const TaskbarController = WV.Plugins.NewInstance("TaskbarController");
+TaskbarController.Icon = "C:/Calculator.ico"
 TaskbarController.IconSmall = "/Calculator.ico"
 
 
-const SysMenu = WV.NewPluginInstance("SysMenuController");
+const SysMenu = WV.Plugins.NewInstance("SysMenuController");
 
 // Es visible por defecto
 //SysMenu.Visible = true;

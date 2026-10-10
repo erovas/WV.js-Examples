@@ -9,9 +9,16 @@ const AWV = window.WebView.Async;
 
 // Load all plugins Demo/plugins
 /** @type {string[]} */
-const plugins = WV.LoadPluginsFromFolder();
+const plugins = WV.Plugins.LoadFrom();
+const arrPlugins = [];
 
-//WV.Browser.OpenDevTools();
+for (let index = 0; index < plugins.Count; index++) {
+    arrPlugins.push(plugins.Get(index).Name);
+}
+
+console.log(arrPlugins);
+
+WV.Browser.OpenDevTools();
 
 WV.Window.AddEventListener("StateChanged", (n, t) => {
     console.log("StateChanged: " + WV.Window.StateText);
@@ -21,14 +28,21 @@ WV.Window.AddEventListener("Visible", e => {
     console.log("visible: " + e);
 });
 
+
+let scale = WV.Browser.ZoomFactor;
+const minZoom = WV.Browser.MinZoomFactor;
+const maxZoom = WV.Browser.MaxZoomFactor;
+
+
 WV.Window.Rect.Width = 869;
 WV.Window.Rect.Height = 610;
 
 WV.Window.Title = "WV.js"
 
-// Plugins instances
-let TaskbarManager  = WV.NewPluginInstance("TaskbarController");
-let SysMenu = WV.NewPluginInstance("SysMenuController");
+
+let TaskbarManager  = WV.Plugins.NewInstance("TaskbarController");
+let SysMenu = WV.Plugins.NewInstance("SysMenuController");
+//let Mouse = WV.NewPluginInstance("MouseController");
 
 
 TaskbarManager.Icon = "Bombilla.ico" // .../src/Ver.js.ico
@@ -68,6 +82,7 @@ function GetElementById(id){
 function hitTest(x, y){
     const InnerWidth = window.innerWidth;
     const InnerHeight = window.innerHeight;
+
 
     // Cuando se esté Maximizado, NO detectar colisión con bordes
     if(WV.Window.State === MAXIMIZED)
@@ -126,7 +141,16 @@ function FireWV(WV){
     UID.textContent = WV.UID;
     Name.textContent = WV.Name;
     IsMain.textContent = WV.IsMain;
-    PluginsName.textContent = WV.PluginsName;
+    //PluginsName.textContent = WV.PluginsName;
+
+    var loaded = [];
+
+    for (let index = 0; index < WV.Plugins.Loaded.Length; index++) {
+        loaded.push(WV.Plugins.Loaded[index].Name);
+        //loaded.push(WV.Plugins.Loaded[index]);
+    }
+
+    PluginsName.textContent = loaded;
 }
 
 //#endregion
@@ -166,7 +190,7 @@ function FireWVWin(WVWin){
         WVWin.Enabled = e.target.checked;
     }
 
-    WVWin.AddEventListener("EnabledEvent", isEnable => {
+    WVWin.AddEventListener("Enabled", isEnable => {
         if(isEnable)
             return;
 
@@ -228,11 +252,14 @@ function FireWVWin(WVWin){
         document.documentElement.style.opacity = isActive? 1 : 0.85;
         IsActive.textContent = isActive;
         IsActiveFoot.textContent = isActive;
+        //throw new Error("ERORORRO");
+        
+        return "VALORRRR"
     }
 
     WVWin.AddEventListener("Activated", fn);
 
-    fn(WVWin.IsActive);
+    //fn(WVWin.IsActive);
 
     /** @type {HTMLSpanElement} */
     let State = GetElementById("State");
@@ -405,6 +432,8 @@ function FireRect(WVWin){
         SizeFoot.textContent = width + 'x' + height;
         Width.value = width;
         Height.value = height;
+        
+        
     };
 
     WVWin.AddEventListener("SizeChanged", sfn);
@@ -440,6 +469,7 @@ function FireBrowser(Browser){
     let OnPlayingAudio = isPlayingAudio => {
         IsPlayingAudio.textContent = isPlayingAudio;
         IsPlayingAudioFoot.textContent = isPlayingAudio;
+        return "VALORRRRR";
     }
 
     WV.Browser.AddEventListener("PlayingAudio", OnPlayingAudio);
@@ -496,20 +526,21 @@ function FireBrowser(Browser){
         MutedFoot.textContent = isMuted
     }
 
-    Browser.AddEventListener("MutedEvent", OnMuted);
+    Browser.AddEventListener("Muted", OnMuted);
     OnMuted(Browser.Muted);
+
+    let PinchZoom = GetElementById("PinchZoom");
+    PinchZoom.onchange = function(e){
+        //PinchZoom.checked = pinch;
+        WV.Pinch = PinchZoom.checked;
+    }
 
     /** @type {HTMLInputElement} */
     let ZoomFactor = GetElementById("ZoomFactor");
-    let minZoom = Browser.MinZoomFactor;
-    let maxZoom = Browser.MaxZoomFactor;
 
-    ZoomFactor.min = minZoom;
-    ZoomFactor.max = maxZoom;
+    ZoomFactor.min = Browser.MinZoomFactor;
+    ZoomFactor.max = Browser.MaxZoomFactor;
     ZoomFactor.step = 0.1;
-    
-    document.getElementById("minZoomFactor").innerText = minZoom;
-    document.getElementById("maxZoomFactor").innerText = maxZoom;
 
     ZoomFactor.oninput = e => {
         Browser.ZoomFactor = parseFloat(e.target.value);
@@ -548,7 +579,6 @@ function FireContextMenu(Browser){
 
     let item1 = ContextMenu.CreateContextItem("Command 1", "Command", "iconoo.ico", function(kind, checked){
         console.log("Command 1 clickeado")
-        alert("Command 1 clicked")
     });
 
     let item2 = ContextMenu.CreateContextItem("CheckBox 1", "CheckBox", null, function(kind, checked){
@@ -611,7 +641,6 @@ window.onload = function(){
     const TitleBar = document.querySelector('.title-bar');
 
     // Evento para controlar el redimensionamiento de la pantalla mediante los bordes de la misma
-    // Resizing handler
     window.onmousedown = e => {
 
         if(WV.Window.State == 2)
@@ -657,7 +686,6 @@ window.onload = function(){
     }
 
     // Evento para controlar el arrastre de la ventana
-    // Drag handler
     TitleBar.onmousedown = e => {
      
         if(e.button == 2)
@@ -696,7 +724,6 @@ window.onload = function(){
     }
 
     //Para cambiar icono del cursor segun la colisión del cursor con los bordes de la ventana
-    // Change cursor icon
     window.onmousemove = e => {
         const HTML = document.documentElement;
         const x = e.clientX;

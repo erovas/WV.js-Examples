@@ -4,18 +4,20 @@
     <script src="script.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+
     <title>Document</title>
     <link rel="stylesheet" href="https://unpkg.com/xp.css">
     <style>
         html, body {
-            touch-action: manipulation; /* Permite pan y scroll pero no zoom */
-            -ms-touch-action: manipulation; /* Para IE/Edge */
-            overscroll-behavior: contain; /* Evita bounce effect en iOS/Android */
-            -webkit-text-size-adjust: 100%; /* Evita zoom en texto iOS */
-            -moz-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-            text-size-adjust: 100%;
+            touch-action: pan-x pan-y; /* Permite desplazar, bloquea zoom */
+            touch-action: manipulation;
+            /* touch-action: none; */ /* Bloquea todos los gestos táctiles */
         }
 
         html {
@@ -41,6 +43,7 @@
             flex-grow: 1;
         }
     </style>
+    <!--<script src="https://erovas.github.io/Device.js/Device.js"></script>-->
     
 </head>
 <body>
@@ -165,7 +168,22 @@
                     <b><span id="IsPlayingAudio"></span></b>
                     <audio controls>
                         <source src="Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">
+                        <!--<source src="file:///D:/Documents/Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">-->
                         <!--<source src="D:/Documents/Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">-->
+                        <!-- Si sirve -->
+                        <!--<source src="../../../../../../../Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">-->
+                        <!-- NO sirve -->
+                        <!--<source src="../../../../../../../../../../../c:/Windows.old/Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">-->
+                      Your browser does not support the audio element.
+                    </audio>
+                    <audio controls>
+                        <!--<source src="Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">-->
+                        <source src="D:/Documents/Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">
+                        <!--<source src="D:/Documents/Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">-->
+                        <!-- Si sirve -->
+                        <!--<source src="../../../../../../../Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">-->
+                        <!-- NO sirve -->
+                        <!--<source src="../../../../../../../../../../../c:/Windows.old/Stadium Rave(ARCY Bootleg).mp3" type="audio/mpeg">-->
                       Your browser does not support the audio element.
                     </audio>
                 </div>
@@ -187,17 +205,14 @@
                     <div></div>
                     <input id="Muted" type="checkbox" name="Muted">
                     <label for="Muted">Muted</label>
+                    <div></div>
+                    <input id="PinchZoom" type="checkbox" name="PinchZoom">
+                    <label for="PinchZoom">PinchZoom</label>
                 </div>
 
                 <div class="field-row">
                     <input id="ZoomFactor" type="number" name="ZoomFactor" style="width: 30px;">
                     <label for="ZoomFactor">ZoomFactor</label>
-                    <div></div>
-                    <label>Min ZoomFactor: </label>
-                    <label id="minZoomFactor"></label>
-                    <div></div>
-                    <label>Max ZoomFactor: </label>
-                    <label id="maxZoomFactor"></label>
                 </div>
                 
                 <div class="field-row">
