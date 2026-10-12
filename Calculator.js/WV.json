@@ -17,7 +17,8 @@
         "ZoomFactor": 1,
         "Muted": false,
         "StatusBarEnabled": true,
-        "ColorScheme": "Auto"
+        "ColorScheme": "Auto",
+        "DebuggingPort": 9222
     },
     "Plugins": {
         "Directory": "plugins",
